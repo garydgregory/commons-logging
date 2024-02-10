@@ -17,6 +17,7 @@
 
 package org.apache.commons.logging.log4j.log4j12;
 
+import java.io.NotSerializableException;
 import java.util.List;
 
 import org.apache.commons.logging.log4j.StandardTests;
@@ -24,12 +25,9 @@ import org.apache.log4j.Level;
 import org.apache.log4j.Logger;
 
 /**
- * A concrete class that runs the standard tests, and is compiled
- * specifically against Log4j 1.2. The parent class can't call any
- * Log4j methods at all as that would mean it has to be compiled
- * against a particular version of log4j.
+ * A concrete class that runs the standard tests, and is compiled specifically against Log4j 1.2. The parent class can't
+ * call any Log4j methods at all as that would mean it has to be compiled against a particular version of log4j.
  */
-
 public class Log4j12StandardTests extends StandardTests {
 
     @Override
@@ -39,5 +37,15 @@ public class Log4j12StandardTests extends StandardTests {
         rootLogger.removeAllAppenders();
         rootLogger.addAppender(appender);
         rootLogger.setLevel(Level.INFO);
+    }
+
+    @Override
+    public void testSerializable() {
+        try {
+            super.testSerializable();
+            fail("Expected NotSerializableException");
+        } catch (Exception e) {
+            assertTrue(e instanceof NotSerializableException);
+        }
     }
 }
